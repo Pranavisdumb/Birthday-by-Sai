@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday......</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pink-primary: #FF69B4; /* Deep Pink */
+            --pink-light: #FCDFEF; /* Light Pink */
+            --pink-bg: #FFF5F7; /* Very light pink/off-white */
+            --shadow-light: 0 10px 15px -3px rgba(255, 105, 180, 0.1), 0 4px 6px -2px rgba(255, 105, 180, 0.05);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--pink-bg);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            /* Whimsical Background Effect */
+            background-image: radial-gradient(circle at top left, #FFC0CB40 0%, transparent 25%),
+                              radial-gradient(circle at bottom right, #FFDAB940 0%, transparent 25%),
+                              radial-gradient(circle at center, #F0F8FF30 0%, transparent 50%);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- Floating Decorations (Simulating the video background) --- */
+        .decor {
+            position: absolute;
+            animation: float 20s infinite ease-in-out;
+            opacity: 0.7;
+            z-index: 0;
+            user-select: none;
+            pointer-events: none;
+        }
+        .decor:nth-child(1) { top: 10%; left: 5%; font-size: 2rem; animation-delay: 0s; }
+        .decor:nth-child(2) { top: 20%; right: 10%; font-size: 1.5rem; animation-delay: 5s; }
+        .decor:nth-child(3) { bottom: 5%; left: 15%; font-size: 1rem; animation-delay: 10s; }
+        .decor:nth-child(4) { bottom: 20%; right: 25%; font-size: 2.5rem; animation-delay: 15s; }
+        .decor:nth-child(5) { top: 5%; right: 40%; font-size: 1.2rem; animation-delay: 3s; }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        /* --- Main Card Styling --- */
+        .magic-card {
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-light);
+            max-width: 900px;
+            width: 100%;
+            min-height: 500px;
+            position: relative;
+            z-index: 10;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            border: 1px solid #ffe4e6;
+        }
+
+        /* --- Transitions --- */
+        .step-container {
+            display: none;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+        .step-container.active {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* --- Card Flip Animation --- */
+        .flip-container {
+            perspective: 1000px;
+            height: 200px;
+        }
+        .flipper {
+            transition: 0.6s;
+            transform-style: preserve-3d;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .flip-container.flipped .flipper {
+            transform: rotateY(180deg);
+        }
+        .front, .back {
+            backface-visibility: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .front {
+            z-index: 2;
+            transform: rotateY(0deg);
+            background-color: var(--pink-light);
+            cursor: pointer;
+        }
+        .back {
+            transform: rotateY(180deg);
+            background-color: white;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--pink-primary);
+            font-size: 0.875rem;
+        }
+
+        /* --- Cake Cutting Simulation --- */
+        #cake-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 300px;
+            height: 20px;
+            background-color: var(--pink-primary);
+            border-radius: 50%;
+            opacity: 0;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        }
+        #cake-overlay.cut {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        /* --- Sealing Animation --- */
+        #seal-heart {
+            position: fixed; /* Use fixed to ensure it covers the screen area */
+            top: 50%;
+            left: 50%;
+            font-size: 5rem;
+            color: var(--pink-primary);
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.1);
+            animation: none;
+            pointer-events: none;
+            z-index: 50;
+        }
+        .sealing-animation {
+            animation: seal-pop 0.6s forwards;
+        }
+        @keyframes seal-pop {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.5); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(2); }
+        }
+        /* --- Hug Animation --- */
+        @keyframes hug-float {
+            0% { transform: translateY(0) rotate(0deg) scale(0.5); opacity: 1; }
+            100% { transform: translateY(-50vh) rotate(30deg) scale(1); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Background Decorations -->
+    <span class="decor" style="color:#FFC0CB; transform: rotate(15deg);">⭐</span>
+    <span class="decor" style="color:#ADD8E6; transform: rotate(-10deg);">☁️</span>
+    <span class="decor" style="color:#FF69B4; transform: rotate(25deg);">💖</span>
+    <span class="decor" style="color:#FFE4B5; transform: rotate(0deg);">🌸</span>
+    <span class="decor" style="color:#C6E2FF; transform: rotate(-5deg);">✨</span>
+    <!-- End Decorations -->
+
+    <div id="seal-heart" class="sealing-animation">💖</div>
+
+    <div class="magic-card shadow-2xl">
+
+        <!-- STEP 1: WELCOME SCREEN (Initial Step) -->
+        <div id="step-welcome" data-step="welcome" class="step-container active text-center">
+            <div class="flex justify-between items-start mb-6">
+                <span class="text-sm font-medium text-gray-500">Happy Birthday!</span>
+                <!-- Themed Image: Cute Cat/Icon -->
+                <img src="https://st4.depositphotos.com/3236579/41035/v/450/depositphotos_410353274-stock-illustration-isolated-kitty-curious.jpg" alt="Wink Kitten Icon" class="w-16 h-16 rounded-full -mt-4 -mr-4 border-2 border-pink-300">
+            </div>
+
+            <h1 class="text-6xl font-extrabold text-pink-500 mb-6">
+                Happy Birthday, My Amazing Akka!
+                <span class="inline-block animate-pulse">✨</span>
+            </h1>
+
+            <p class="text-lg text-gray-600 max-w-lg mx-auto mb-10">
+                Today is all about celebrating the most amazing Akka and Kornagu in my world. I've created something magical just for you on your special day...💕
+            </p>
+
+            <div class="relative inline-block">
+                <!-- Themed Image: Decoration -->
+                <img src="https://placehold.co/100x100/F4D7E3/B565A7?text=Heart+Ball" alt="Heart Balloon" class="absolute -left-32 bottom-0 w-24 h-24 transform rotate-12 rounded-full">
+            </div>
+
+            <p class="text-base text-pink-500 font-semibold mb-4">Surprise ku Ready ya?</p>
+            <button onclick="goToStep('letter-intro')" class="px-10 py-4 bg-pink-500 text-white font-bold text-xl rounded-full shadow-lg hover:bg-pink-600 transition duration-300 transform hover:scale-105">
+                Let's Gooo
+            </button>
+
+            <p class="mt-12 text-xs text-gray-400">Made with endless love for your special day 💕 By you Valu Thambi</p>
+        </div>
+
+        <!-- STEP 2: LOVE LETTER INTRO -->
+        <div id="step-letter-intro" data-step="letter-intro" class="step-container text-center">
+            <h2 class="text-3xl font-bold text-pink-500 mb-2">A Special Birthday Note</h2>
+            <p class="text-gray-600 mb-12">From your loving Thambi to the Birthday Kronagu 🙈✨</p>
+
+            <div id="envelope-graphic" class="relative w-64 h-48 mx-auto cursor-pointer" onclick="openLetter()">
+                <div class="absolute inset-0 bg-pink-300 rounded-lg shadow-xl transform rotate-3 transition duration-500"></div>
+                <div class="absolute inset-0 bg-pink-400 rounded-lg shadow-xl transition duration-500 transform -rotate-3 hover:rotate-0"></div>
+                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-5xl">💌</div>
+            </div>
+
+            <p class="text-sm text-gray-500 mt-10">Click to open your birthday surprise</p>
+            <p class="text-lg text-pink-500 font-semibold mt-1">Birthday Special Delivery 🎁</p>
+        </div>
+
+        <!-- STEP 2.5: LOVE LETTER CONTENT -->
+        <div id="step-letter-content" data-step="letter-content" class="step-container">
+            <h2 class="text-3xl font-bold text-pink-500 mb-2 text-center">My Dearest Akka</h2>
+            <div class="bg-pink-50 p-6 rounded-xl relative border border-pink-100">
+                <!-- Themed Image: Party Icon -->
+                <img src="data:image/jpeg;base64,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" alt="Party Icon" class="w-24 h-24 absolute -top-12 -right-12 rounded-full border-4 border-white shadow-md">
+                <p class="font-bold text-pink-500 mb-3">To My Amazing Akka</p>
+                <p class="text-gray-700 leading-relaxed">
+                    My dearest Akka,
+                    <br><br>
+                    Indha naal un life-la oru pudhu Chapter aaramam. Ne en life la irukadhuku naan romba thankful. Nee deserve panra success-um, happiness-um, adventure-um definitely varum. Nee enoda spend panna overu minute um enaku romba special. 
+                    <br><br>
+                    Thank you for being there when I am sad or felt left out. Naa Eppa soogama irundhalum ena happy ya aka nee anga irundhu iruka. You are the best Akka I could ever ask for. Iniya pirandha naal vazhthukkal....<3
+                    <br><br>
+                    Always there for you,
+                </p>
+                <div class="text-center mt-8">
+                    <button onclick="goToStep('cake-time')" class="px-8 py-3 bg-pink-500 text-white font-semibold rounded-full shadow-lg hover:bg-pink-600 transition duration-300">
+                        Next Surpirce
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 3: CAKE CUTTING -->
+        <div id="step-cake-time" data-step="cake-time" class="step-container text-center">
+            <h2 class="text-3xl font-bold text-pink-500 mb-2">It's Cake Time!</h2>
+            <p class="text-gray-600 mb-12">May your birthday wish come true!</p>
+
+            <div id="cake-container" class="relative inline-block cursor-pointer">
+                <!-- Themed Image: Cake -->
+                <img id="cake-image" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaEgGsGRhvkauFffouVogNTrRijK7kjo-UEQ&s" alt="Birthday Cake" class="rounded-lg shadow-xl transition duration-500 border-4 border-pink-200">
+                <div id="cake-overlay"></div>
+            </div>
+
+            <div id="cake-prompt">
+                <p class="text-lg text-pink-500 font-semibold mt-8">Ippa Cake Cuting time ✂️</p>
+                <p class="text-sm text-gray-500">Cake a cut panna middle la Press pannu 🎂</p>
+            </div>
+
+            <div id="cake-result" class="hidden mt-8">
+                <p class="text-xl font-bold text-green-500">Idhayavadhu Olunga Cut Panuriey!</p>
+                <p class="text-gray-600">May this year bring you everything your heart desires and more joy than you can imagine!</p>
+                <button onclick="goToStep('wish-time')" class="mt-6 px-8 py-3 bg-pink-500 text-white font-semibold rounded-full shadow-lg hover:bg-pink-600 transition duration-300">
+                    Time for a Wish!
+                </button>
+            </div>
+        </div>
+
+        <!-- STEP 4: WISH MAKING -->
+        <div id="step-wish-time" data-step="wish-time" class="step-container text-center">
+            <h2 class="text-3xl font-bold text-pink-500 mb-2">It's Wish Time!</h2>
+            <p class="text-gray-600 mb-12">May your birthday wish come true!</p>
+
+            <div id="wish-image-container" class="h-40 flex items-center justify-center mb-6">
+                <!-- Initial Image: Single Character -->
+                <img id="wish-image" src="https://static.vecteezy.com/system/resources/thumbnails/047/429/632/small_2x/adorable-pink-star-cartoon-character-with-a-smiling-face-featuring-cute-rounded-eyes-and-a-gradient-coloration-perfect-for-children-s-content-png.png" alt="Single Character" class="rounded-xl shadow-md transition duration-500 border-4 border-pink-100" style="width: 30%;">
+            </div>
+
+
+
+            <p class="text-xl text-pink-500 font-semibold mb-4">Time to Make a Wish! ✨</p>
+            <p class="text-gray-600 mb-8">Close your eyes and make your birthday wish! Think of something wonderful for your new year! (Andha payaluku enna pudikanu Indha Payaluku enna pudikanu nu edhu pannadha)</p>
+
+            <button onclick="madeWish()" class="px-8 py-3 bg-pink-500 text-white font-semibold rounded-full shadow-lg hover:bg-pink-600 transition duration-300 transform hover:scale-105">
+                I've Made My Wish!
+            </button>
+        </div>
+
+        <!-- STEP 5: PLAYLIST -->
+        <div id="step-playlist" data-step="playlist" class="step-container">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-pink-500 mb-2">Birthday Vibes Playlist</h2>
+                <p class="text-gray-600">Songs to celebrate your special day 🎶</p>
+            </div>
+
+            <!-- Simulated Music Player -->
+            <div class="bg-pink-100 p-3 rounded-lg flex items-center justify-between mb-8 shadow-inner">
+                <div class="flex items-center">
+                    <div id="player-icon" class="text-2xl mr-3">🎵</div>
+                    <div>
+                        <p id="player-title" class="font-semibold text-gray-700">Select a Track...</p>
+                        <p class="text-xs text-gray-500">Simulated Playback</p>
+                    </div>
+                </div>
+                <div id="play-pause-btn" class="text-3xl cursor-pointer text-pink-500" onclick="togglePlay()">⏸️</div>
+            </div>
+
+            <!-- Playlist Covers -->
+            <div class="grid grid-cols-3 gap-4">
+                <div class="text-center cursor-pointer" onclick="playTrack('Dil Ka Jo Haal Hai', 1)">
+                    <!-- Themed Image: Pixel Vibes 1 -->
+                    <img src="https://placehold.co/150x150/ADD8E6/000080?text=VIBE+1" alt="Cover 1" class="rounded-xl shadow-md transition duration-300 hover:scale-105 mx-auto border-2 border-blue-200">
+                    <p class="font-semibold text-sm mt-2 text-gray-700">Dil Ka Jo Haal Hai</p>
+                    <p class="text-xs text-gray-500">Here's to making this year unforgettable ✨</p>
+                </div>
+                <div class="text-center cursor-pointer" onclick="playTrack('Dil Cheeze Tujhe Dedi', 2)">
+                    <!-- Themed Image: Pixel Vibes 2 -->
+                    <img src="https://placehold.co/150x150/FF69B4/FFFFFF?text=VIBE+2" alt="Cover 2" class="rounded-xl shadow-md transition duration-300 hover:scale-105 mx-auto border-2 border-pink-200">
+                    <p class="font-semibold text-sm mt-2 text-gray-700">Dil Cheeze Tujhe Dedi</p>
+                    <p class="text-xs text-gray-500">Because today is all about YOU, bestie! 👑</p>
+                </div>
+                <div class="text-center cursor-pointer" onclick="playTrack('If the world was ending...', 3)">
+                    <!-- Themed Image: Pixel Vibes 3 -->
+                    <img src="https://placehold.co/150x150/F0F8FF/FF1493?text=VIBE+3" alt="Cover 3" class="rounded-xl shadow-md transition duration-300 hover:scale-105 mx-auto border-2 border-gray-200">
+                    <p class="font-semibold text-sm mt-2 text-gray-700">If the world was ending...</p>
+                    <p class="text-xs text-gray-500">Every beat celebrates your wonderful heart ❤️</p>
+                </div>
+            </div>
+                    <br><br>
+                  <center><p class="text-gray-600 mb-12">Idha Evlo Try panniyum Vela seiya vaika Mudiyala......Sry...😅</p></center>
+
+            <div class="text-center mt-12">
+                <button onclick="goToStep('wishes-cards')" class="px-8 py-3 bg-pink-500 text-white font-semibold rounded-full shadow-lg hover:bg-pink-600 transition duration-300 transform hover:scale-105">
+                    Continue to Birthday Surprises ✨
+                </button>
+            </div>
+        </div>
+
+        <!-- STEP 6: WISHES CARDS -->
+        <div id="step-wishes-cards" data-step="wishes-cards" class="step-container">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-pink-500 mb-2">Birthday Wishes Cards</h2>
+                <p class="text-gray-600">Click each card to reveal a birthday message! 💌</p>
+            </div>
+
+            <!-- Card Grid -->
+            <div class="grid grid-cols-3 gap-4">
+                <!-- Card 1 -->
+                <div id="card-1" class="flip-container" onclick="flipCard(1)">
+                    <div class="flipper">
+                        <div class="front flex items-center justify-center">
+                            <!-- Themed Image: Card 1 -->
+                            <img src="https://placehold.co/150x150/FCDFEF/C66099?text=Heart+Card+1" alt="Card 1 Front" class="w-24 h-24">
+                        </div>
+                        <div class="back">
+                            Happy Birthday to my incredible Akka! Thanks for all the crazy memories and being my partner in crime! 🥳
+                            <p class="absolute bottom-1 right-2 text-xs font-normal text-gray-400">Tap to flip back</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div id="card-2" class="flip-container" onclick="flipCard(2)">
+                    <div class="flipper">
+                        <div class="front flex items-center justify-center">
+                            <!-- Themed Image: Card 2 -->
+                            <img src="https://placehold.co/150x150/FCDFEF/C66099?text=Flower+Card+2" alt="Card 2 Front" class="w-24 h-24">
+                        </div>
+                        <div class="back">
+                            Cheers to another year of you being incredible, supportive, and my favorite person to annoy! Love you, sis! 🥂
+                            <p class="absolute bottom-1 right-2 text-xs font-normal text-gray-400">Tap to flip back</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div id="card-3" class="flip-container" onclick="flipCard(3)">
+                    <div class="flipper">
+                        <div class="front flex items-center justify-center">
+                            <!-- Themed Image: Card 3 -->
+                            <img src="https://placehold.co/150x150/FCDFEF/C66099?text=Gift+Card+3" alt="Card 3 Front" class="w-24 h-24">
+                        </div>
+                        <div class="back">
+                            I hope this year brings you all the success, happiness, and exciting adventures you've been planning! You deserve it! 🚀
+                            <p class="absolute bottom-1 right-2 text-xs font-normal text-gray-400">Tap to flip back</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-8">
+                <p id="wish-status" class="text-gray-600 font-semibold">0 of 3 birthday wishes unlocked! Keep going! 🔓</p>
+            </div>
+
+            <!-- Modal for All Wishes Unlocked -->
+            <div id="wishes-unlocked-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+                <div class="bg-white p-8 rounded-xl text-center shadow-2xl max-w-sm">
+                    <h3 class="text-3xl font-bold text-pink-500 mb-4">All Birthday Wishes Unlocked! 🔑</h3>
+                    <p class="text-gray-600 mb-6">Each wish carries my love and hopes for your amazing new year ahead.</p>
+                    <button onclick="document.getElementById('wishes-unlocked-modal').classList.add('hidden'); goToStep('final-letter')" class="px-8 py-3 bg-pink-500 text-white font-semibold rounded-full shadow-lg hover:bg-pink-600 transition duration-300 transform hover:scale-105">
+                        Open Final Birthday Note 💌
+                    </button>
+                    <p class="text-sm text-gray-500 mt-3">Enjoy the wishes a bit longer</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 7: FINAL LETTER & SEALING -->
+        <div id="step-final-letter" data-step="final-letter" class="step-container">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-pink-500 mb-2">Final Birthday Note</h2>
+                <p class="text-gray-600">A special message sealed with love 💕</p>
+            </div>
+
+            <div id="final-letter-content" class="bg-pink-50 p-6 rounded-xl relative border border-pink-100">
+                <!-- Themed Image: Small Cat Icon -->
+                <img src="https://www.dictionary.com/e/wp-content/uploads/2018/02/20200713_huggingFace_800x800-380x380.png" alt="Love Icon" class="w-16 h-16 absolute -top-8 -right-8 rounded-full border-4 border-white shadow-md">
+                <p class="font-bold text-pink-500 mb-3">Final Birthday Note</p>
+                <p class="text-gray-700 leading-relaxed">
+                    My dearest Akka,
+                    <br><br>
+                    Thank you for being such an important and amazing person in my life. I know this next year is going to be your best yet, and I'll be here cheering you on every step of the way.
+                    <br><br>
+                    Happy Birthday, my amazing Akka. You deserve the world and so much more.
+                </p>
+                <div class="mt-8">
+                    <p class="text-sm text-gray-500 mb-3">Sealing will complete your birthday experience.</p>
+                    <button id="seal-btn" onclick="sealLetter()" class="px-6 py-3 bg-green-400 text-white font-semibold rounded-full shadow-lg hover:bg-green-500 transition duration-300 mr-4">
+                        Seal The Note 💌
+                    </button>
+                    <button onclick="goToStep('welcome')" class="px-6 py-3 bg-gray-300 text-gray-800 font-semibold rounded-full shadow-lg hover:bg-gray-400 transition duration-300">
+                        Experience Again
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sealed Confirmation -->
+            <div id="sealed-confirmation" class="hidden text-center mt-12">
+                <h3 class="text-4xl font-extrabold text-pink-500 mb-4">Birthday Note Sealed with Love</h3>
+                <p class="text-2xl text-pink-400">💖💖💖💖💖</p>
+                <p class="text-gray-600 mt-2 text-lg font-semibold">Always There For You, Happy Birthday!</p>
+                <p class="text-sm text-gray-400"><3</p>
+
+                <div class="mt-8 flex justify-center space-x-4">
+                    <button onclick="goToStep('welcome')" class="px-8 py-4 bg-pink-500 text-white font-bold rounded-full shadow-lg hover:bg-pink-600 transition duration-300 transform hover:scale-105">
+                        Experience Birthday Magic Again ✨
+                    </button>
+                    <button id="hug-btn" onclick="sendHugs(event)" class="px-8 py-4 bg-red-400 text-white font-bold rounded-full shadow-lg hover:bg-red-500 transition duration-300 transform hover:scale-105">
+                        Send Birthday Hugs 🤗
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // State Management
+        let currentStep = 'welcome';
+        let wishesUnlocked = 0;
+        const totalWishes = 3;
+        let isCakeCut = false;
+        let isPlaying = false;
+
+        const STEPS = [
+            'welcome', 
+            'letter-intro', 
+            'letter-content', 
+            'cake-time', 
+            'wish-time', 
+            'playlist', 
+            'wishes-cards', 
+            'final-letter'
+        ];
+
+        // --- Core Navigation Function ---
+        function goToStep(nextStep) {
+            const currentElement = document.getElementById(`step-${currentStep}`);
+            const nextElement = document.getElementById(`step-${nextStep}`);
+
+            // Hide all steps before transitioning
+            document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
+
+            if (currentElement) {
+                currentElement.classList.remove('active');
+            }
+            
+            // Allow time for fade out transition before showing next screen
+            setTimeout(() => {
+                if (nextElement) {
+                    // Reset views that have hidden content when navigating away
+                    if (currentStep === 'final-letter') {
+                         document.getElementById('final-letter-content').classList.remove('hidden');
+                         document.getElementById('sealed-confirmation').classList.add('hidden');
+                         document.getElementById('seal-btn').disabled = false;
+                         document.getElementById('seal-btn').innerHTML = 'Seal The Note 💌';
+                    }
+
+                    nextElement.classList.add('active');
+                    currentStep = nextStep;
+
+                    // Specific step setup logic
+                    if (nextStep === 'cake-time' && !isCakeCut) {
+                        document.getElementById('cake-result').classList.add('hidden');
+                        document.getElementById('cake-prompt').classList.remove('hidden');
+                        document.getElementById('cake-overlay').classList.remove('cut');
+                    }
+                    if (nextStep === 'welcome') {
+                        // Reset entire state if starting over
+                        isCakeCut = false;
+                        wishesUnlocked = 0;
+                        // Reset card flips visually
+                        document.getElementById('card-1').classList.remove('flipped');
+                        document.getElementById('card-2').classList.remove('flipped');
+                        document.getElementById('card-3').classList.remove('flipped');
+                        document.getElementById('wish-status').textContent = '0 of 3 birthday wishes unlocked! Keep going! 🔓';
+                    }
+                }
+            }, 500); // 500ms for CSS transition to complete
+        }
+
+        // --- Step 2: Letter Interaction ---
+        function openLetter() {
+            // A simple graphic change and transition to content
+            document.getElementById('envelope-graphic').innerHTML = '<p class="text-3xl text-pink-500 mt-10">...Opening...</p>';
+            setTimeout(() => {
+                goToStep('letter-content');
+            }, 800);
+        }
+        
+        // --- Step 3: Cake Interaction ---
+        const cakeContainer = document.getElementById('cake-container');
+        if(cakeContainer) {
+            cakeContainer.addEventListener('click', cutCake);
+        }
+
+        function cutCake() {
+            if (isCakeCut) return;
+            
+            document.getElementById('cake-overlay').classList.add('cut');
+            
+            setTimeout(() => {
+                document.getElementById('cake-prompt').classList.add('hidden');
+                document.getElementById('cake-result').classList.remove('hidden');
+                isCakeCut = true; // Prevent cutting again
+            }, 400);
+        }
+        
+        // --- Step 4: Wish Interaction ---
+        function madeWish() {
+            // Update image to show a group (Simulating Hello Kitty + Friends)
+            const wishImage = document.getElementById('wish-image');
+            wishImage.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUHrCaPV8RqPQkjcYVBJDn0QTcJrJLghxq4Lzo3Jfb1leuLHOhwRe4lUbxAKVnjnscnlc&usqp=CAU';
+            
+            // Simple confetti effect (using floating decor)
+            const confettiContainer = document.createElement('div');
+            confettiContainer.className = 'absolute inset-0 z-20 pointer-events-none overflow-hidden';
+            confettiContainer.innerHTML = `
+                <span style="top: 20%; left: 30%; color: #FFDAB9;" class="decor">🎊</span>
+                <span style="top: 10%; right: 20%; color: #ADD8E6;" class="decor">🎉</span>
+                <span style="bottom: 15%; left: 5%; color: #FF69B4;" class="decor">🎈</span>
+            `;
+            document.querySelector('.magic-card').appendChild(confettiContainer);
+
+            // Wait a moment before moving to the next step
+            setTimeout(() => {
+                // Remove the temporary confetti elements
+                document.querySelector('.magic-card').removeChild(confettiContainer);
+                goToStep('playlist');
+            }, 1500);
+        }
+
+        // --- Step 5: Playlist Interaction ---
+        function playTrack(title, trackNumber) {
+            isPlaying = true;
+            document.getElementById('player-title').textContent = title;
+            document.getElementById('player-icon').textContent = '▶️';
+            document.getElementById('play-pause-btn').innerHTML = '⏸️';
+            console.log(`Simulating playing: ${title}`);
+        }
+
+        function togglePlay() {
+            const playerIcon = document.getElementById('play-pause-btn');
+            if (isPlaying) {
+                isPlaying = false;
+                playerIcon.textContent = '▶️';
+                console.log('Simulating Pause');
+            } else {
+                isPlaying = true;
+                playerIcon.textContent = '⏸️';
+                console.log('Simulating Play');
+            }
+        }
+
+        // --- Step 6: Wishes Cards Interaction ---
+        function flipCard(cardId) {
+            const card = document.getElementById(`card-${cardId}`);
+            
+            // Toggle the flipped class
+            card.classList.toggle('flipped');
+
+            // Recalculate unlocked wishes
+            wishesUnlocked = 0;
+            document.querySelectorAll('.flip-container').forEach(c => {
+                if (c.classList.contains('flipped')) {
+                    wishesUnlocked++;
+                }
+            });
+            
+            // Update status text
+            document.getElementById('wish-status').textContent = 
+                `${wishesUnlocked} of ${totalWishes} birthday wishes unlocked! Keep going! ${wishesUnlocked === totalWishes ? '🎉' : '🔓'}`;
+
+            // Check if all are unlocked
+            if (wishesUnlocked === totalWishes) {
+                setTimeout(() => {
+                    document.getElementById('wishes-unlocked-modal').classList.remove('hidden');
+                }, 600);
+            } else {
+                document.getElementById('wishes-unlocked-modal').classList.add('hidden');
+            }
+        }
+        
+        // --- Step 7: Final Letter Sealing ---
+        function sealLetter() {
+            const sealHeart = document.getElementById('seal-heart');
+            const sealBtn = document.getElementById('seal-btn');
+
+            sealBtn.disabled = true;
+            sealBtn.innerHTML = 'Sealing...';
+
+            // Start the visual animation
+            sealHeart.classList.add('sealing-animation');
+
+            setTimeout(() => {
+                // Remove the animation class to allow it to be re-run
+                sealHeart.classList.remove('sealing-animation');
+
+                // Transition to the sealed confirmation screen
+                document.getElementById('final-letter-content').classList.add('hidden');
+                document.getElementById('sealed-confirmation').classList.remove('hidden');
+
+            }, 600); // Matches the animation duration
+        }
+
+        function sendHugs(event) {
+            // Creates 15 floating hug emojis from the button location
+            const buttonRect = event.currentTarget.getBoundingClientRect();
+            
+            for (let i = 0; i < 15; i++) {
+                const hug = document.createElement('span');
+                hug.textContent = '🤗'; // Changed from 💋 to 🤗
+                hug.className = 'absolute'; // Use absolute for dynamic positioning
+                hug.style.zIndex = 40; // Above the main card
+                
+                // Position starting around the button
+                hug.style.left = `${buttonRect.left + buttonRect.width / 2 + (Math.random() * 60 - 30)}px`;
+                hug.style.top = `${buttonRect.top + buttonRect.height / 2}px`;
+                hug.style.fontSize = `${Math.random() * 2 + 1}rem`;
+                
+                // Use CSS for animation (using the kiss-float logic, but renamed for context)
+                hug.style.animation = `hug-float ${Math.random() * 3 + 2}s forwards`;
+                hug.style.animationDelay = `${Math.random() * 0.5}s`;
+                
+                document.body.appendChild(hug);
+                
+                // Clean up the hug element after its animation is complete
+                setTimeout(() => {
+                    hug.remove();
+                }, (Math.random() * 3 + 2) * 1000 + 500); 
+            }
+        }
+
+        // Initial setup on load
+        window.onload = function() {
+            // Check if all steps are rendered and set initial state
+            STEPS.forEach(step => {
+                const el = document.getElementById(`step-${step}`);
+                if (el) {
+                    el.classList.remove('active');
+                }
+            });
+            document.getElementById('step-welcome').classList.add('active');
+        };
+
+    </script>
+</body>
+</html>
